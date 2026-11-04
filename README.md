@@ -17,8 +17,9 @@ Open the local address printed in the terminal.
 - Basic navigation and routes connected using React Router.
 - Redux Toolkit store with two sample events.
 - Simple layout using plain CSS.
+- Registration and login forms with required fields and password confirmation.
 
-The account, verification, registration and organizer pages currently contain
-placeholder text. Event cards, forms and working user flows will be added in the
-next development steps. Authentication, email delivery and database integration
-are not implemented yet.
+The email verification, My Registrations and organizer pages currently contain
+placeholder text. The account forms check input but do not create accounts or
+log users in yet. Event cards, authentication, email delivery and database
+integration will be added in the next development steps.
