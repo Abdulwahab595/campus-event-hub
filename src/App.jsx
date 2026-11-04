@@ -1,6 +1,8 @@
 import { Link, Route, Routes } from 'react-router'
 import Navbar from './components/Navbar'
 import EventsPage from './pages/EventsPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import './App.css'
 
@@ -11,23 +13,8 @@ function App() {
       <main className="page-content">
         <Routes>
           <Route path="/" element={<EventsPage />} />
-          <Route
-            path="/login"
-            element={
-              <PlaceholderPage title="Log in">
-                <p>Log in to access your campus events.</p>
-              </PlaceholderPage>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PlaceholderPage title="Register">
-                <p>Create an account to join campus events.</p>
-                <Link to="/verify-email">Verify your email</Link>
-              </PlaceholderPage>
-            }
-          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route
             path="/verify-email"
             element={
