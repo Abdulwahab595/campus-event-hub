@@ -52,3 +52,14 @@
 .auth-links {
   margin-top: 20px;
 }
+
+.demo-note {
+  color: #4e5661;
+  font-size: 14px;
+}
+
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

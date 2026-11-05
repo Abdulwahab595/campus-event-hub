@@ -1,8 +1,13 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router'
+import { createDemoCode, registerUser } from '../store/authSlice'
 import './Auth.css'
 
 function RegisterPage() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const users = useSelector((state) => state.auth.users)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -11,12 +16,10 @@ function RegisterPage() {
     confirmPassword: '',
   })
   const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
 
   function handleChange(event) {
     setForm({ ...form, [event.target.name]: event.target.value })
     setError('')
-    setMessage('')
   }
 
   function handleSubmit(event) {
@@ -32,15 +35,28 @@ function RegisterPage() {
       return
     }
 
-    // This task adds the form. Account creation is connected in the next task.
+    const email = form.email.trim().toLowerCase()
+    if (users.some((user) => user.email === email)) {
+      setError('An account with this email already exists in this demo.')
+      return
+    }
+
     setError('')
-    setMessage('Form checked. Account creation will be connected next.')
+    dispatch(registerUser({
+      name: form.name.trim(),
+      email,
+      role: form.role,
+      password: form.password,
+      verificationCode: createDemoCode(),
+    }))
+    navigate('/verify-email')
   }
 
   return (
     <section className="page-panel auth-panel">
       <h1>Register</h1>
       <p>Create a student or organizer account.</p>
+      <p className="demo-note">Frontend demo: use made-up details and a dummy password. No email is sent.</p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="register-name">
@@ -111,7 +127,6 @@ function RegisterPage() {
         </label>
 
         {error && <p className="form-error" role="alert">{error}</p>}
-        {message && <p className="form-message" role="status">{message}</p>}
 
         <button type="submit">Register</button>
       </form>
