@@ -25,9 +25,24 @@ Open the local address printed in the terminal.
 - In-memory demo accounts managed using Redux Toolkit.
 - Six-digit demo verification codes, resend, verified-only login and logout.
 - Navigation shows the logged-in user's name and role.
+- Organizer dashboard with a sample-event list and create/edit form previews.
 
-The My Registrations and organizer pages currently contain placeholder text.
-Event registration, organizer event management and full page-access checks are later tasks.
+The My Registrations page currently contains placeholder text.
+Student event registration, organizer save/delete actions, organizer ownership
+checks and the remaining page-access checks are later tasks.
+
+## Organizer form previews
+
+Register, verify and log in using an Organizer demo account, then choose Organizer
+in the navigation. Create event opens an empty form; Preview edit form opens a
+sample event with its current values filled in. The form includes title,
+description, category, date/time in PKT and venue. Check form validates the inputs
+and displays feedback. Cancel returns to the dashboard.
+
+This task previews the layout using the shared sample events. It does not save,
+update or delete events, and the sample list is not yet filtered by ownership.
+Those connections are the next organizer task. Guests and Students cannot open
+these organizer previews, but real authorization still requires the final backend.
 
 ## Browse events
 

@@ -5,6 +5,8 @@ import EventDetailsPage from './pages/EventDetailsPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
+import OrganizerPage from './pages/OrganizerPage'
+import OrganizerEventFormPage from './pages/OrganizerEventFormPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import './App.css'
 
@@ -27,14 +29,9 @@ function App() {
               </PlaceholderPage>
             }
           />
-          <Route
-            path="/organizer"
-            element={
-              <PlaceholderPage title="Organizer Dashboard">
-                <p>Create and manage your campus events.</p>
-              </PlaceholderPage>
-            }
-          />
+          <Route path="/organizer" element={<OrganizerPage />} />
+          <Route path="/organizer/events/new" element={<OrganizerEventFormPage />} />
+          <Route path="/organizer/events/:eventId/edit" element={<OrganizerEventFormPage />} />
           <Route
             path="*"
             element={

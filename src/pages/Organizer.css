@@ -1,0 +1,71 @@
+.organizer-events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.organizer-events li {
+  padding: 18px 0;
+  border-bottom: 1px solid #d8dce0;
+}
+
+.organizer-events h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.organizer-events p {
+  margin-bottom: 8px;
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 650px;
+}
+
+.event-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-weight: bold;
+}
+
+.event-form input,
+.event-form textarea,
+.event-form select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #aab2ba;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.event-form textarea {
+  resize: vertical;
+}
+
+.event-form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.event-form button {
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 4px;
+  color: white;
+  background-color: #245b87;
+  font: inherit;
+  cursor: pointer;
+}
+
+.event-form-error {
+  margin: 0;
+  color: #a51d1d;
+}
