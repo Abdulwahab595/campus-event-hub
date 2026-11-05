@@ -2,6 +2,7 @@ import { Link, Route, Routes } from 'react-router'
 import Navbar from './components/Navbar'
 import EventsPage from './pages/EventsPage'
 import EventDetailsPage from './pages/EventDetailsPage'
+import MyRegistrationsPage from './pages/MyRegistrationsPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
@@ -21,14 +22,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route
-            path="/my-registrations"
-            element={
-              <PlaceholderPage title="My Registrations">
-                <p>Events you register for will appear here.</p>
-              </PlaceholderPage>
-            }
-          />
+          <Route path="/my-registrations" element={<MyRegistrationsPage />} />
           <Route path="/organizer" element={<OrganizerPage />} />
           <Route path="/organizer/events/new" element={<OrganizerEventFormPage />} />
           <Route path="/organizer/events/:eventId/edit" element={<OrganizerEventFormPage />} />

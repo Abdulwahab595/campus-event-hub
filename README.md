@@ -26,10 +26,21 @@ Open the local address printed in the terminal.
 - Six-digit demo verification codes, resend, verified-only login and logout.
 - Navigation shows the logged-in user's name and role.
 - Organizer dashboard with a sample-event list and create/edit form previews.
+- Verified Students can register for events from their details pages.
+- My Registrations shows only the current Student's events, with duplicate registration blocked.
 
-The My Registrations page currently contains placeholder text.
-Student event registration, organizer save/delete actions, organizer ownership
-checks and the remaining page-access checks are later tasks.
+Organizer save/delete actions, organizer ownership checks, browser persistence
+and the remaining page-access checks are later tasks.
+
+## Student event registration
+
+Register, verify and log in using a Student demo account. Open an event's details
+and choose Register for event. The button changes to Already registered and is
+disabled, and the event appears in My Registrations. Each Student sees their own
+events; the same event cannot be registered twice by the same Student.
+
+Guests are asked to log in, and Organizer accounts cannot register as Students.
+Registrations currently exist only in Redux memory and reset on a full reload.
 
 ## Organizer form previews
 
@@ -57,7 +68,7 @@ Register with made-up details and a dummy password. The verification page shows
 a six-digit demo code. An unverified account cannot log in. Resend generates a
 new code; after verification, log in to see the appropriate navigation and log out.
 
-Accounts and login state exist only in memory and reset on a full page reload.
+Accounts, login state and event registrations exist only in memory and reset on a full page reload.
 Dummy passwords are held in demo state only. There is no real email delivery,
 JWT authentication, secure server-side authorization or database integration yet.
 These remain requirements for the final project. Use only sample details here.
