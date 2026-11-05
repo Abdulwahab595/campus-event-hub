@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+
 function EventCard({ event }) {
   const eventDate = new Date(event.date).toLocaleString('en-GB', {
     dateStyle: 'medium',
@@ -16,6 +18,7 @@ function EventCard({ event }) {
         <time dateTime={event.date}>{eventDate} PKT</time>
       </p>
       <p><strong>Venue:</strong> {event.venue}</p>
+      <p><Link to={`/events/${event.id}`}>View details</Link></p>
     </article>
   )
 }

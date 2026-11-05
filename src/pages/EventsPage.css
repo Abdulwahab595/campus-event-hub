@@ -1,3 +1,39 @@
+.event-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.event-filters label {
+  display: flex;
+  flex: 1 1 180px;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-weight: bold;
+}
+
+.event-filters input,
+.event-filters select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #aab2ba;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.event-filters button {
+  padding: 10px 14px;
+  border: 1px solid #aab2ba;
+  border-radius: 4px;
+  background-color: #f4f5f7;
+  font: inherit;
+  cursor: pointer;
+}
+
 .event-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

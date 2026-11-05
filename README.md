@@ -17,6 +17,9 @@ Open the local address printed in the terminal.
 - Basic navigation and routes connected using React Router.
 - Redux Toolkit store with two sample events.
 - Event cards showing the sample events, categories, descriptions, dates and venues.
+- Event details pages linked from each event card.
+- Title search and category/date filters that work together, with a clear-filters button.
+- No-results feedback and an event-not-found page for unavailable events.
 - Simple layout using plain CSS.
 - Registration and login forms with required fields and password confirmation.
 - In-memory demo accounts managed using Redux Toolkit.
@@ -24,7 +27,14 @@ Open the local address printed in the terminal.
 - Navigation shows the logged-in user's name and role.
 
 The My Registrations and organizer pages currently contain placeholder text.
-Search, event details, event registration and full page-access checks are later tasks.
+Event registration, organizer event management and full page-access checks are later tasks.
+
+## Browse events
+
+Search by event title, choose a category or select an exact event date. The date
+filter uses Pakistan time (PKT), matching the times shown on the event cards.
+The filters work together. Choose Clear filters to show all events again.
+Choose View details on a card to see the event's full information.
 
 ## Demo account flow
 
