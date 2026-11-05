@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import EventsPage from './pages/EventsPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import './App.css'
 
@@ -15,14 +16,7 @@ function App() {
           <Route path="/" element={<EventsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route
-            path="/verify-email"
-            element={
-              <PlaceholderPage title="Verify your email">
-                <p>Email verification is required before using your account.</p>
-              </PlaceholderPage>
-            }
-          />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route
             path="/my-registrations"
             element={

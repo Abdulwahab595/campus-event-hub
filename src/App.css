@@ -23,6 +23,7 @@
 
 .nav-links {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -42,6 +43,15 @@
   max-width: 1100px;
   margin: 28px auto;
   padding: 0 20px;
+}
+
+.logout-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 }
 
 .page-panel {
