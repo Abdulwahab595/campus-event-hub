@@ -21,6 +21,7 @@ Open the local address printed in the terminal.
 - Title search and category/date filters that work together, with a clear-filters button.
 - No-results feedback and an event-not-found page for unavailable events.
 - Simple layout using plain CSS.
+- Phone layouts with stacked filters/form actions and wrapping for long event and account text.
 - Registration and login forms with required fields and password confirmation.
 - In-memory demo accounts managed using Redux Toolkit.
 - Six-digit demo verification codes, resend, verified-only login and logout.
@@ -82,6 +83,14 @@ Accounts and login state exist only in memory and reset after a full reload.
 Dummy passwords are held in demo state only. There is no real email delivery,
 JWT authentication, secure server-side authorization or database integration yet.
 These remain requirements for the final project. Use only sample details here.
+
+## Phone layout
+
+At widths of 600px or below, event cards use one column and filter controls,
+verification actions and organizer form/actions stack to fit the screen.
+Form and event action buttons fill their available area, and long names, email addresses,
+event titles and venues wrap inside the page. Desktop browsing keeps two event
+columns. The existing plain CSS and media queries handle these layouts.
 
 ## Browser data after refresh
 
