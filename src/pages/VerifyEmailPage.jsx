@@ -14,6 +14,12 @@ function VerifyEmailPage() {
 
   function handleSubmit(event) {
     event.preventDefault()
+    if (!/^[0-9]{6}$/.test(code)) {
+      setError('Please enter exactly six digits.')
+      setMessage('')
+      return
+    }
+
     if (code !== account.verificationCode) {
       setError('Incorrect verification code. Please try again.')
       setMessage('')
@@ -67,7 +73,7 @@ function VerifyEmailPage() {
         No email is sent in this frontend demo. Your code is <strong>{account.verificationCode}</strong>.
       </p>
 
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit} noValidate>
         <label htmlFor="verification-code">
           Six-digit code
           <input

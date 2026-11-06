@@ -33,8 +33,22 @@ Open the local address printed in the terminal.
 - Verified Students can register for events from their details pages.
 - My Registrations shows only the current Student's events, with duplicate registration blocked.
 - Events and registrations are saved in browser localStorage and restored after refresh.
+- Event forms show field-specific validation and require a valid future date/time in PKT.
+- Verification shows inline feedback when a code is not exactly six numeric digits.
 
-The final form-validation/feedback checks remain a later task.
+The Phase 1 frontend features are implemented; final shared checks and submission preparation remain.
+
+## Form validation and feedback
+
+Create/edit forms check the title, description, category, date/time and venue
+before saving. Text containing only spaces is rejected. The date/time must be
+valid and later than the current time, using PKT (+05:00). Invalid input stays
+on the form with a message, and changing a field clears that message.
+
+The verification form checks for exactly six numeric digits before comparing
+the code. Wrong or replaced codes remain rejected; Resend code clears old
+feedback and produces a different demo code. Existing account validation,
+delete confirmation and empty-dashboard messages remain in place.
 
 ## Page access
 

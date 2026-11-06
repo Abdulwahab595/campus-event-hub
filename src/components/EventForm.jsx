@@ -20,8 +20,35 @@ function EventForm({ event, onSave }) {
   function handleSubmit(submitEvent) {
     submitEvent.preventDefault()
 
-    if (!form.title.trim() || !form.description.trim() || !form.venue.trim()) {
-      setError('Enter a title, description and venue using more than spaces.')
+    if (!form.title.trim()) {
+      setError('Please enter an event title.')
+      return
+    }
+
+    if (!form.description.trim()) {
+      setError('Please enter an event description.')
+      return
+    }
+
+    if (!form.category) {
+      setError('Please choose an event category.')
+      return
+    }
+
+    const eventDate = `${form.date}:00+05:00`
+    const eventTime = new Date(eventDate).getTime()
+    if (!form.date || Number.isNaN(eventTime)) {
+      setError('Please enter a valid event date and time (PKT).')
+      return
+    }
+
+    if (eventTime <= Date.now()) {
+      setError('Please choose a future event date and time (PKT).')
+      return
+    }
+
+    if (!form.venue.trim()) {
+      setError('Please enter an event venue.')
       return
     }
 
@@ -30,13 +57,13 @@ function EventForm({ event, onSave }) {
       title: form.title.trim(),
       description: form.description.trim(),
       category: form.category,
-      date: `${form.date}:00+05:00`,
+      date: eventDate,
       venue: form.venue.trim(),
     })
   }
 
   return (
-    <form className="event-form" onSubmit={handleSubmit}>
+    <form className="event-form" onSubmit={handleSubmit} noValidate>
       <label htmlFor="event-title">
         Event title
         <input id="event-title" name="title" type="text" value={form.title} onChange={handleChange} required />
