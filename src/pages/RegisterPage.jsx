@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router'
+import { Link, Navigate, useNavigate } from 'react-router'
 import { createDemoCode, registerUser } from '../store/authSlice'
 import './Auth.css'
 
@@ -8,6 +8,7 @@ function RegisterPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const users = useSelector((state) => state.auth.users)
+  const currentUser = useSelector((state) => state.auth.currentUser)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -51,6 +52,8 @@ function RegisterPage() {
     }))
     navigate('/verify-email')
   }
+
+  if (currentUser) return <Navigate to="/" replace />
 
   return (
     <section className="page-panel auth-panel">

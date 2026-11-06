@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate, useParams } from 'react-router'
+import { Link, Navigate, useNavigate, useParams } from 'react-router'
 import EventForm from '../components/EventForm'
 import { createEvent, updateEvent } from '../store/eventsSlice'
 import './Organizer.css'
@@ -25,12 +25,14 @@ function OrganizerEventFormPage() {
     navigate('/organizer')
   }
 
-  if (!user || user.role !== 'organizer' || !user.isVerified) {
+  if (!user) return <Navigate to="/login" replace />
+
+  if (user.role !== 'organizer' || !user.isVerified) {
     return (
       <section className="page-panel">
         <h1>Organizer account required</h1>
-        <p>Log in with an Organizer account to open the event form.</p>
-        <Link to="/login">Go to login</Link>
+        <p>A verified Organizer account is required to manage events.</p>
+        <Link to="/">Back to events</Link>
       </section>
     )
   }

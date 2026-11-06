@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router'
+import { Link, Navigate } from 'react-router'
 import EventCard from '../components/EventCard'
 import './EventsPage.css'
 
@@ -8,15 +8,7 @@ function MyRegistrationsPage() {
   const registrations = useSelector((state) => state.registrations.items)
   const events = useSelector((state) => state.events.items)
 
-  if (!user) {
-    return (
-      <section className="page-panel">
-        <h1>My Registrations</h1>
-        <p>Log in with a Student account to see your registered events.</p>
-        <Link to="/login">Go to login</Link>
-      </section>
-    )
-  }
+  if (!user) return <Navigate to="/login" replace />
 
   if (user.role !== 'student' || !user.isVerified) {
     return (

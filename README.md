@@ -22,6 +22,7 @@ Open the local address printed in the terminal.
 - No-results feedback and an event-not-found page for unavailable events.
 - Simple layout using plain CSS.
 - Phone layouts with stacked filters/form actions and wrapping for long event and account text.
+- Private pages redirect guests to login, and account pages redirect signed-in users to events.
 - Registration and login forms with required fields and password confirmation.
 - In-memory demo accounts managed using Redux Toolkit.
 - Six-digit demo verification codes, resend, verified-only login and logout.
@@ -33,7 +34,19 @@ Open the local address printed in the terminal.
 - My Registrations shows only the current Student's events, with duplicate registration blocked.
 - Events and registrations are saved in browser localStorage and restored after refresh.
 
-The remaining page-access/validation checks are later tasks.
+The final form-validation/feedback checks remain a later task.
+
+## Page access
+
+Events and event details are public. My Registrations requires a verified Student
+account; the organizer dashboard and create/edit pages require a verified Organizer.
+Opening a private URL as a guest redirects to login. A signed-in account with the
+wrong role sees an account-required message and a link back to events.
+
+Signed-in users opening login, register or verification URLs return to Events.
+Log out before using another demo account. Unverified accounts cannot log in.
+Missing/deleted event links and unknown page URLs keep their existing fallback messages.
+These checks guide the frontend demo; server-side authorization is still required later.
 
 ## Student event registration
 

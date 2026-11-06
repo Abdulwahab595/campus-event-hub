@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router'
+import { Link, Navigate } from 'react-router'
 import { createDemoCode, resendVerificationCode, verifyEmail } from '../store/authSlice'
 import './Auth.css'
 
 function VerifyEmailPage() {
   const dispatch = useDispatch()
-  const { users, pendingEmail } = useSelector((state) => state.auth)
+  const { users, pendingEmail, currentUser } = useSelector((state) => state.auth)
   const account = users.find((user) => user.email === pendingEmail)
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
@@ -34,6 +34,8 @@ function VerifyEmailPage() {
     setError('')
     setMessage('A new demo code is ready.')
   }
+
+  if (currentUser) return <Navigate to="/" replace />
 
   if (!account) {
     return (

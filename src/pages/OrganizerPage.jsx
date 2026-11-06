@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router'
+import { Link, Navigate } from 'react-router'
 import { deleteEvent } from '../store/eventsSlice'
 import { removeRegistrationsForEvent } from '../store/registrationsSlice'
 import './Organizer.css'
@@ -20,12 +20,14 @@ function OrganizerPage() {
     setMessage('Event deleted.')
   }
 
-  if (!user || user.role !== 'organizer' || !user.isVerified) {
+  if (!user) return <Navigate to="/login" replace />
+
+  if (user.role !== 'organizer' || !user.isVerified) {
     return (
       <section className="page-panel">
-        <h1>Organizer Dashboard</h1>
-        <p>Log in with an Organizer account to open this page.</p>
-        <Link to="/login">Go to login</Link>
+        <h1>Organizer account required</h1>
+        <p>A verified Organizer account is required to manage events.</p>
+        <Link to="/">Back to events</Link>
       </section>
     )
   }
