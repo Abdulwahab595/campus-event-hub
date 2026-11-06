@@ -18,6 +18,26 @@
   margin-bottom: 8px;
 }
 
+.organizer-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.organizer-actions button {
+  padding: 6px 10px;
+  border: 1px solid #aab2ba;
+  border-radius: 4px;
+  background-color: #f4f5f7;
+  font: inherit;
+  cursor: pointer;
+}
+
+.delete-confirmation {
+  margin-top: 12px;
+}
+
 .event-form {
   display: flex;
   flex-direction: column;

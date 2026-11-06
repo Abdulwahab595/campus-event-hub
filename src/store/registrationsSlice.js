@@ -21,8 +21,11 @@ const registrationsSlice = createSlice({
         studentId,
       })
     },
+    removeRegistrationsForEvent(state, action) {
+      state.items = state.items.filter((item) => item.eventId !== action.payload)
+    },
   },
 })
 
-export const { registerForEvent } = registrationsSlice.actions
+export const { registerForEvent, removeRegistrationsForEvent } = registrationsSlice.actions
 export default registrationsSlice.reducer

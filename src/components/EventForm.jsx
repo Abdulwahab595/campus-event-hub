@@ -1,22 +1,20 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 
-function EventForm({ event }) {
+function EventForm({ event, onSave }) {
   const [form, setForm] = useState({
     title: event?.title || '',
     description: event?.description || '',
     category: event?.category || 'Workshop',
-    // The sample events store their date and time in PKT (+05:00).
+    // Event dates are stored in PKT (+05:00), matching the form label.
     date: event?.date ? event.date.slice(0, 16) : '',
     venue: event?.venue || '',
   })
   const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
 
   function handleChange(changeEvent) {
     setForm({ ...form, [changeEvent.target.name]: changeEvent.target.value })
     setError('')
-    setMessage('')
   }
 
   function handleSubmit(submitEvent) {
@@ -24,12 +22,17 @@ function EventForm({ event }) {
 
     if (!form.title.trim() || !form.description.trim() || !form.venue.trim()) {
       setError('Enter a title, description and venue using more than spaces.')
-      setMessage('')
       return
     }
 
     setError('')
-    setMessage('Form checked. This preview has not changed the event list.')
+    onSave({
+      title: form.title.trim(),
+      description: form.description.trim(),
+      category: form.category,
+      date: `${form.date}:00+05:00`,
+      venue: form.venue.trim(),
+    })
   }
 
   return (
@@ -65,10 +68,9 @@ function EventForm({ event }) {
       </label>
 
       {error && <p className="event-form-error" role="alert">{error}</p>}
-      {message && <p role="status">{message}</p>}
 
       <div className="event-form-actions">
-        <button type="submit">Check form</button>
+        <button type="submit">{event ? 'Save changes' : 'Create event'}</button>
         <Link to="/organizer">Cancel</Link>
       </div>
     </form>

@@ -24,7 +24,29 @@ const eventsSlice = createSlice({
       },
     ],
   },
-  reducers: {},
+  reducers: {
+    createEvent(state, action) {
+      const event = action.payload
+      if (!event.id || !event.organizerId || state.items.some((item) => item.id === event.id)) return
+      state.items.push(event)
+    },
+    updateEvent(state, action) {
+      const updated = action.payload
+      const event = state.items.find((item) => item.id === updated.id && item.organizerId === updated.organizerId)
+      if (!event) return
+
+      event.title = updated.title
+      event.description = updated.description
+      event.category = updated.category
+      event.date = updated.date
+      event.venue = updated.venue
+    },
+    deleteEvent(state, action) {
+      const { id, organizerId } = action.payload
+      state.items = state.items.filter((event) => event.id !== id || event.organizerId !== organizerId)
+    },
+  },
 })
 
+export const { createEvent, updateEvent, deleteEvent } = eventsSlice.actions
 export default eventsSlice.reducer
