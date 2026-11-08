@@ -36,7 +36,25 @@ Open the local address printed in the terminal.
 - Event forms show field-specific validation and require a valid future date/time in PKT.
 - Verification shows inline feedback when a code is not exactly six numeric digits.
 
-The Phase 1 frontend features are implemented; final shared checks and submission preparation remain.
+The Phase 1 frontend features are implemented. Event and Student flow checks are
+complete; final account/organizer review and submission preparation remain.
+
+## Event and Student checks - November 8
+
+Checked a clean copy of commit 38e857a with dummy accounts. Installing the locked
+dependencies with npm ci and building with npm run build both passed. The browser
+walkthrough passed 35 checks covering:
+
+- Title search, combined category/PKT date filters, Clear filters and no-results feedback.
+- Event details, guest restrictions, missing events and unknown page links.
+- Separate registration lists for two Students and duplicate-registration prevention.
+- Organizer-created events appearing in browsing and Student registration lists.
+- Event edits updating existing registrations, and deletion removing only the related registrations.
+- Registrations and deletion surviving refresh, with the same demo email reconnecting its saved list.
+- Passwords and verification codes staying out of saved data, and the personal list fitting a 375px viewport.
+
+No application-code changes were needed for these checks. Account and login state
+still reset after reload, as described below.
 
 ## Form validation and feedback
 
