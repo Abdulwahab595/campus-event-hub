@@ -40,7 +40,7 @@ function LoginPage() {
   if (currentUser) return <Navigate to="/" replace />
 
   return (
-    <section className="page-panel auth-panel">
+    <section className="page-panel auth-panel login-panel">
       <h1>Log in</h1>
       <p>Access your Campus Event Hub account.</p>
       <p className="demo-note">Use an account created in this demo. Accounts reset when the page is reloaded.</p>
