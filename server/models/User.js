@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   verificationCodeHash: { type: String, select: false },
   verificationExpiresAt: { type: Date },
+  verificationAttempts: { type: Number, default: 0 },
+  verificationResendAt: { type: Date },
 });
 
 module.exports = mongoose.model("User", userSchema);
