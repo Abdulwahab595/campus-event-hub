@@ -32,6 +32,8 @@ app.use((error, req, res, next) => {
 });
 
 async function startServer() {
+  if (!process.env.JWT_SECRET) throw new Error("Set JWT_SECRET in server/.env");
+
   await connectDB();
   await User.init(); // Wait for MongoDB to create the unique email index.
 

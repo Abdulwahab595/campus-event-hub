@@ -1,6 +1,7 @@
 const { createHmac, randomInt } = require("node:crypto");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const hashPassword = require("../utils/password");
+const { hashPassword, checkPassword } = require("../utils/password");
 
 const CODE_LIFETIME = 10 * 60 * 1000;
 const RESEND_DELAY = 60 * 1000;
@@ -137,4 +138,33 @@ async function resendCode(req, res) {
   return sendVerificationEmail(res, email, code, 200);
 }
 
-module.exports = { register, verifyEmail, resendCode };
+function publicUser(user) {
+  return { id: user.id, name: user.name, email: user.email, role: user.role, isVerified: user.isVerified };
+}
+
+async function login(req, res) {
+  const { email: inputEmail, password } = req.body || {};
+  const email = normalizeEmail(inputEmail);
+  if (!email || typeof password !== "string" || !password || password.length > 128) {
+    return res.status(400).json({ message: "Enter a valid email and password." });
+  }
+
+  const user = await User.findOne({ email }).select("+passwordHash");
+  if (!user || !(await checkPassword(password, user.passwordHash))) {
+    return res.status(401).json({ message: "Email or password is incorrect." });
+  }
+  if (!user.isVerified) {
+    return res.status(403).json({ code: "EMAIL_NOT_VERIFIED", message: "Verify your email before logging in." });
+  }
+
+  const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  res.set("Cache-Control", "no-store");
+  return res.json({ token, user: publicUser(user) });
+}
+
+function getCurrentUser(req, res) {
+  res.set("Cache-Control", "no-store");
+  return res.json({ user: publicUser(req.user) });
+}
+
+module.exports = { register, verifyEmail, resendCode, login, getCurrentUser };
