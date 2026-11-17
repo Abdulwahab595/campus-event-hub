@@ -1,4 +1,8 @@
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, Route, Routes } from 'react-router'
+import { apiRequest, TOKEN_KEY } from './api'
+import { setCurrentUser } from './store/authSlice'
 import Navbar from './components/Navbar'
 import EventsPage from './pages/EventsPage'
 import EventDetailsPage from './pages/EventDetailsPage'
@@ -12,6 +16,36 @@ import PlaceholderPage from './pages/PlaceholderPage'
 import './App.css'
 
 function App() {
+  const dispatch = useDispatch()
+  const [restoringSession, setRestoringSession] = useState(() => Boolean(localStorage.getItem(TOKEN_KEY)))
+
+  useEffect(() => {
+    const token = localStorage.getItem(TOKEN_KEY)
+    if (!token) return
+
+    let active = true
+
+    async function restoreSession() {
+      try {
+        const { user } = await apiRequest('/api/auth/me', { token })
+        if (active) dispatch(setCurrentUser(user))
+      } catch (error) {
+        if (active && (error.status === 401 || error.status === 403)) {
+          localStorage.removeItem(TOKEN_KEY)
+        }
+      } finally {
+        if (active) setRestoringSession(false)
+      }
+    }
+
+    restoreSession()
+    return () => { active = false }
+  }, [dispatch])
+
+  if (restoringSession) {
+    return <main className="page-content"><p role="status">Checking your login…</p></main>
+  }
+
   return (
     <>
       <Navbar />

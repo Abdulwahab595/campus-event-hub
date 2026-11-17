@@ -1,40 +1,41 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate, useNavigate } from 'react-router'
-import { loginUser, setPendingEmail } from '../store/authSlice'
+import { apiRequest, TOKEN_KEY } from '../api'
+import { setCurrentUser } from '../store/authSlice'
 import './Auth.css'
 
 function LoginPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const users = useSelector((state) => state.auth.users)
   const currentUser = useSelector((state) => state.auth.currentUser)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [needsVerification, setNeedsVerification] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     const normalizedEmail = email.trim().toLowerCase()
-    const user = users.find((user) => user.email === normalizedEmail)
-
-    if (!user || user.password !== password) {
-      setError('Email or password is incorrect.')
-      setNeedsVerification(false)
-      return
+    setError('')
+    setNeedsVerification(false)
+    setSubmitting(true)
+    try {
+      const { token, user } = await apiRequest('/api/auth/login', {
+        method: 'POST',
+        data: { email: normalizedEmail, password },
+      })
+      localStorage.setItem(TOKEN_KEY, token)
+      dispatch(setCurrentUser(user))
+      navigate('/', { replace: true })
+    } catch (error) {
+      setError(error.message)
+      setNeedsVerification(error.code === 'EMAIL_NOT_VERIFIED')
+    } finally {
+      setSubmitting(false)
     }
-
-    if (!user.isVerified) {
-      dispatch(setPendingEmail(user.email))
-      setError('Verify your email before logging in.')
-      setNeedsVerification(true)
-      return
-    }
-
-    dispatch(loginUser({ email: normalizedEmail, password }))
-    navigate('/')
   }
 
   if (currentUser) return <Navigate to="/" replace />
@@ -43,7 +44,7 @@ function LoginPage() {
     <section className="page-panel auth-panel login-panel">
       <h1>Log in</h1>
       <p>Access your Campus Event Hub account.</p>
-      <p className="demo-note">Use an account created in this demo. Accounts reset when the page is reloaded.</p>
+      <p className="demo-note">Verify your email before logging in.</p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="login-email">
@@ -79,9 +80,9 @@ function LoginPage() {
         </label>
 
         {error && <p className="form-error" role="alert">{error}</p>}
-        {needsVerification && <Link to="/verify-email">Verify your email</Link>}
+        {needsVerification && <Link to="/verify-email" state={{ email }}>Verify your email</Link>}
 
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={submitting}>{submitting ? 'Logging in…' : 'Log in'}</button>
       </form>
 
       <p className="auth-links">Need an account? <Link to="/register">Register</Link></p>

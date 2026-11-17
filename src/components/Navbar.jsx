@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, NavLink, useNavigate } from 'react-router'
+import { TOKEN_KEY } from '../api'
 import { logoutUser } from '../store/authSlice'
 
 function Navbar() {
@@ -8,6 +9,7 @@ function Navbar() {
   const navigate = useNavigate()
 
   function handleLogout() {
+    localStorage.removeItem(TOKEN_KEY)
     dispatch(logoutUser())
     navigate('/login')
   }

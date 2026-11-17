@@ -1,65 +1,70 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, Navigate } from 'react-router'
-import { createDemoCode, resendVerificationCode, verifyEmail } from '../store/authSlice'
+import { useSelector } from 'react-redux'
+import { Link, Navigate, useLocation } from 'react-router'
+import { apiRequest } from '../api'
 import './Auth.css'
 
 function VerifyEmailPage() {
-  const dispatch = useDispatch()
-  const { users, pendingEmail, currentUser } = useSelector((state) => state.auth)
-  const account = users.find((user) => user.email === pendingEmail)
+  const { state } = useLocation()
+  const currentUser = useSelector((state) => state.auth.currentUser)
+  const [email, setEmail] = useState(state?.email || '')
   const [code, setCode] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState(state?.error || '')
   const [message, setMessage] = useState('')
+  const [verified, setVerified] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
+    setError('')
+    setMessage('')
+    if (!email.trim()) {
+      setError('Enter the email address you registered with.')
+      return
+    }
     if (!/^[0-9]{6}$/.test(code)) {
       setError('Please enter exactly six digits.')
-      setMessage('')
       return
     }
 
-    if (code !== account.verificationCode) {
-      setError('Incorrect verification code. Please try again.')
-      setMessage('')
-      return
+    setSubmitting(true)
+    try {
+      await apiRequest('/api/auth/verify-email', { method: 'POST', data: { email, code } })
+      setVerified(true)
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setSubmitting(false)
     }
-
-    dispatch(verifyEmail({ email: account.email, code }))
   }
 
-  function handleResend() {
-    let newCode = createDemoCode()
-    while (newCode === account.verificationCode) {
-      newCode = createDemoCode()
+  async function handleResend() {
+    setError('')
+    setMessage('')
+    if (!email.trim()) {
+      setError('Enter the email address you registered with.')
+      return
     }
 
-    dispatch(resendVerificationCode({ email: account.email, code: newCode }))
-    setCode('')
-    setError('')
-    setMessage('A new demo code is ready.')
+    setSubmitting(true)
+    try {
+      const result = await apiRequest('/api/auth/resend-code', { method: 'POST', data: { email } })
+      setCode('')
+      setMessage(result.message)
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (currentUser) return <Navigate to="/" replace />
 
-  if (!account) {
-    return (
-      <section className="page-panel auth-panel">
-        <h1>Verify your email</h1>
-        <p>Register a demo account first, or try logging in to an unverified account.</p>
-        <Link to="/register">Register</Link>
-        {' | '}
-        <Link to="/login">Log in</Link>
-      </section>
-    )
-  }
-
-  if (account.isVerified) {
+  if (verified) {
     return (
       <section className="page-panel auth-panel">
         <h1>Email verified</h1>
-        <p role="status">Your demo account is verified. You can now log in.</p>
+        <p role="status">Your account is verified. You can now log in.</p>
         <Link to="/login">Continue to login</Link>
       </section>
     )
@@ -68,12 +73,26 @@ function VerifyEmailPage() {
   return (
     <section className="page-panel auth-panel">
       <h1>Verify your email</h1>
-      <p>Verify the demo account for <strong>{account.email}</strong>.</p>
-      <p className="demo-note">
-        No email is sent in this frontend demo. Your code is <strong>{account.verificationCode}</strong>.
-      </p>
+      <p>Enter the six-digit code sent to your email. Check Spam if it is not in your inbox.</p>
 
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        <label htmlFor="verification-email">
+          Email address
+          <input
+            id="verification-email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              setCode('')
+              setError('')
+              setMessage('')
+            }}
+            required
+          />
+        </label>
+
         <label htmlFor="verification-code">
           Six-digit code
           <input
@@ -98,8 +117,8 @@ function VerifyEmailPage() {
         {message && <p className="form-message" role="status">{message}</p>}
 
         <div className="auth-actions">
-          <button type="submit">Verify email</button>
-          <button type="button" onClick={handleResend}>Resend code</button>
+          <button type="submit" disabled={submitting}>Verify email</button>
+          <button type="button" disabled={submitting} onClick={handleResend}>Resend code</button>
         </div>
       </form>
 

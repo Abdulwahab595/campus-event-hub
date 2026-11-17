@@ -1,13 +1,11 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link, Navigate, useNavigate } from 'react-router'
-import { createDemoCode, registerUser } from '../store/authSlice'
+import { apiRequest } from '../api'
 import './Auth.css'
 
 function RegisterPage() {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const users = useSelector((state) => state.auth.users)
   const currentUser = useSelector((state) => state.auth.currentUser)
   const [form, setForm] = useState({
     name: '',
@@ -17,13 +15,14 @@ function RegisterPage() {
     confirmPassword: '',
   })
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   function handleChange(event) {
     setForm({ ...form, [event.target.name]: event.target.value })
     setError('')
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     if (!form.name.trim()) {
@@ -37,20 +36,23 @@ function RegisterPage() {
     }
 
     const email = form.email.trim().toLowerCase()
-    if (users.some((user) => user.email === email)) {
-      setError('An account with this email already exists in this demo.')
-      return
-    }
-
     setError('')
-    dispatch(registerUser({
-      name: form.name.trim(),
-      email,
-      role: form.role,
-      password: form.password,
-      verificationCode: createDemoCode(),
-    }))
-    navigate('/verify-email')
+    setSubmitting(true)
+    try {
+      await apiRequest('/api/auth/register', {
+        method: 'POST',
+        data: { name: form.name.trim(), email, role: form.role, password: form.password },
+      })
+      navigate('/verify-email', { state: { email } })
+    } catch (error) {
+      if (error.status === 503) {
+        navigate('/verify-email', { state: { email, error: error.message } })
+      } else {
+        setError(error.message)
+      }
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (currentUser) return <Navigate to="/" replace />
@@ -59,7 +61,7 @@ function RegisterPage() {
     <section className="page-panel auth-panel">
       <h1>Register</h1>
       <p>Create a student or organizer account.</p>
-      <p className="demo-note">Frontend demo: use made-up details and a dummy password. No email is sent.</p>
+      <p>Use an email address where you can receive your verification code.</p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="register-name">
@@ -68,6 +70,7 @@ function RegisterPage() {
             id="register-name"
             name="name"
             type="text"
+            maxLength={100}
             autoComplete="name"
             value={form.name}
             onChange={handleChange}
@@ -109,6 +112,7 @@ function RegisterPage() {
             type="password"
             autoComplete="new-password"
             minLength={6}
+            maxLength={128}
             value={form.password}
             onChange={handleChange}
             required
@@ -123,6 +127,7 @@ function RegisterPage() {
             type="password"
             autoComplete="new-password"
             minLength={6}
+            maxLength={128}
             value={form.confirmPassword}
             onChange={handleChange}
             required
@@ -131,11 +136,11 @@ function RegisterPage() {
 
         {error && <p className="form-error" role="alert">{error}</p>}
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled={submitting}>{submitting ? 'Registering…' : 'Register'}</button>
       </form>
 
       <p className="auth-links">Already have an account? <Link to="/login">Log in</Link></p>
-      <p>Have a verification code? <Link to="/verify-email">Verify your email</Link></p>
+      <p>Have a verification code? <Link to="/verify-email" state={{ email: form.email }}>Verify your email</Link></p>
     </section>
   )
 }
