@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, NavLink, useNavigate } from 'react-router'
 import { TOKEN_KEY } from '../api'
 import { logoutUser } from '../store/authSlice'
+import { setRegistrations } from '../store/registrationsSlice'
 
 function Navbar() {
   const user = useSelector((state) => state.auth.currentUser)
@@ -10,6 +11,7 @@ function Navbar() {
 
   function handleLogout() {
     localStorage.removeItem(TOKEN_KEY)
+    dispatch(setRegistrations([]))
     dispatch(logoutUser())
     navigate('/login')
   }

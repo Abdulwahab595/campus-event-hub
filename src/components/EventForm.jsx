@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 
-function EventForm({ event, onSave }) {
+function EventForm({ event, onSave, saving = false }) {
   const [form, setForm] = useState({
     title: event?.title || '',
     description: event?.description || '',
     category: event?.category || 'Workshop',
-    // Event dates are stored in PKT (+05:00), matching the form label.
-    date: event?.date ? event.date.slice(0, 16) : '',
+    // The API returns UTC. Add five hours to show the same time in PKT.
+    date: event?.date ? new Date(new Date(event.date).getTime() + 5 * 60 * 60 * 1000).toISOString().slice(0, 16) : '',
     venue: event?.venue || '',
   })
   const [error, setError] = useState('')
@@ -19,6 +19,7 @@ function EventForm({ event, onSave }) {
 
   function handleSubmit(submitEvent) {
     submitEvent.preventDefault()
+    if (saving) return
 
     if (!form.title.trim()) {
       setError('Please enter an event title.')
@@ -66,12 +67,12 @@ function EventForm({ event, onSave }) {
     <form className="event-form" onSubmit={handleSubmit} noValidate>
       <label htmlFor="event-title">
         Event title
-        <input id="event-title" name="title" type="text" value={form.title} onChange={handleChange} required />
+        <input id="event-title" name="title" type="text" value={form.title} onChange={handleChange} maxLength={150} required />
       </label>
 
       <label htmlFor="event-description">
         Description
-        <textarea id="event-description" name="description" rows={4} value={form.description} onChange={handleChange} required />
+        <textarea id="event-description" name="description" rows={4} value={form.description} onChange={handleChange} maxLength={5000} required />
       </label>
 
       <label htmlFor="event-category">
@@ -91,13 +92,13 @@ function EventForm({ event, onSave }) {
 
       <label htmlFor="event-venue">
         Venue
-        <input id="event-venue" name="venue" type="text" value={form.venue} onChange={handleChange} required />
+        <input id="event-venue" name="venue" type="text" value={form.venue} onChange={handleChange} maxLength={200} required />
       </label>
 
       {error && <p className="event-form-error" role="alert">{error}</p>}
 
       <div className="event-form-actions">
-        <button type="submit">{event ? 'Save changes' : 'Create event'}</button>
+        <button type="submit" disabled={saving}>{saving ? 'Saving...' : event ? 'Save changes' : 'Create event'}</button>
         <Link to="/organizer">Cancel</Link>
       </div>
     </form>

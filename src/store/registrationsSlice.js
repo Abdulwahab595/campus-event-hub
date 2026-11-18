@@ -2,30 +2,21 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const registrationsSlice = createSlice({
   name: 'registrations',
-  initialState: {
-    items: [],
-  },
+  initialState: { items: [] },
   reducers: {
-    registerForEvent(state, action) {
-      const { eventId, studentId } = action.payload
-      if (!eventId || !studentId) return
-
-      const alreadyRegistered = state.items.some(
-        (item) => item.eventId === eventId && item.studentId === studentId,
-      )
-      if (alreadyRegistered) return
-
-      state.items.push({
-        id: `${studentId}:${eventId}`,
-        eventId,
-        studentId,
-      })
+    setRegistrations(state, action) {
+      state.items = action.payload
     },
-    removeRegistrationsForEvent(state, action) {
+    saveRegistration(state, action) {
+      const index = state.items.findIndex((item) => item.id === action.payload.id)
+      if (index === -1) state.items.push(action.payload)
+      else state.items[index] = action.payload
+    },
+    removeRegistration(state, action) {
       state.items = state.items.filter((item) => item.eventId !== action.payload)
     },
   },
 })
 
-export const { registerForEvent, removeRegistrationsForEvent } = registrationsSlice.actions
+export const { setRegistrations, saveRegistration, removeRegistration } = registrationsSlice.actions
 export default registrationsSlice.reducer
