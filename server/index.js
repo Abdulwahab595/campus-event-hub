@@ -4,7 +4,10 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const User = require("./models/User");
+const Registration = require("./models/Registration");
 const authRoutes = require("./routes/authRoutes");
+const eventRoutes = require("./routes/eventRoutes");
+const registrationRoutes = require("./routes/registrationRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +20,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/registrations", registrationRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headersSent) return next(error);
@@ -36,6 +41,7 @@ async function startServer() {
 
   await connectDB();
   await User.init(); // Wait for MongoDB to create the unique email index.
+  await Registration.init(); // Prevent duplicate student/event registrations.
 
   app.listen(PORT, "127.0.0.1", (error) => {
     if (error) {
