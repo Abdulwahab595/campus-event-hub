@@ -10,8 +10,11 @@ async function sendEventReminders() {
   running = true;
 
   try {
-    const registrations = await Registration.find().populate("eventId").populate("studentId");
-    for (const registration of registrations) {
+    const registrations = await Registration.find().select("_id");
+    for (const item of registrations) {
+      // A registration or event can change while another email is being sent.
+      const registration = await Registration.findById(item.id).populate("eventId").populate("studentId");
+      if (!registration) continue;
       const event = registration.eventId;
       const student = registration.studentId;
       if (!event || !student || student.role !== "student" || !student.isVerified) continue;
