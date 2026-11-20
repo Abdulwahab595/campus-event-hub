@@ -16,6 +16,7 @@ function VerifyEmailPage() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    if (submitting) return
     setError('')
     setMessage('')
     if (!email.trim()) {
@@ -39,6 +40,7 @@ function VerifyEmailPage() {
   }
 
   async function handleResend() {
+    if (submitting) return
     setError('')
     setMessage('')
     if (!email.trim()) {

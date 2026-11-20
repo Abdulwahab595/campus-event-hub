@@ -24,6 +24,7 @@ function RegisterPage() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    if (submitting) return
 
     if (!form.name.trim()) {
       setError('Please enter your name.')

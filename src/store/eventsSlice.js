@@ -2,8 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const eventsSlice = createSlice({
   name: 'events',
-  initialState: { items: [] },
+  initialState: { items: [], message: '' },
   reducers: {
+    setEventMessage(state, action) {
+      state.message = action.payload
+    },
     setEvents(state, action) {
       state.items = action.payload
     },
@@ -18,5 +21,5 @@ const eventsSlice = createSlice({
   },
 })
 
-export const { setEvents, saveEvent, deleteEvent } = eventsSlice.actions
+export const { setEvents, saveEvent, deleteEvent, setEventMessage } = eventsSlice.actions
 export default eventsSlice.reducer

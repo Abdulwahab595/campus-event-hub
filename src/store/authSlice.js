@@ -4,13 +4,16 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     currentUser: null,
+    sessionMessage: '',
   },
   reducers: {
     setCurrentUser(state, action) {
       state.currentUser = action.payload
+      state.sessionMessage = ''
     },
-    logoutUser(state) {
+    logoutUser(state, action) {
       state.currentUser = null
+      state.sessionMessage = action.payload || ''
     },
   },
 })

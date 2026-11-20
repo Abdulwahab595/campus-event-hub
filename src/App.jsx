@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, Route, Routes } from 'react-router'
 import { apiRequest, TOKEN_KEY } from './api'
-import { setCurrentUser } from './store/authSlice'
+import { setCurrentUser, logoutUser } from './store/authSlice'
+import { setRegistrations } from './store/registrationsSlice'
 import Navbar from './components/Navbar'
 import EventsPage from './pages/EventsPage'
 import EventDetailsPage from './pages/EventDetailsPage'
@@ -18,20 +19,34 @@ import './App.css'
 function App() {
   const dispatch = useDispatch()
   const [restoringSession, setRestoringSession] = useState(() => Boolean(localStorage.getItem(TOKEN_KEY)))
+  const [sessionError, setSessionError] = useState('')
+  const [restoreAttempt, setRestoreAttempt] = useState(0)
 
   useEffect(() => {
     const token = localStorage.getItem(TOKEN_KEY)
-    if (!token) return
+    if (!token) {
+      setSessionError('')
+      setRestoringSession(false)
+      return
+    }
 
     let active = true
 
     async function restoreSession() {
+      setRestoringSession(true)
+      setSessionError('')
       try {
         const { user } = await apiRequest('/api/auth/me', { token })
         if (active) dispatch(setCurrentUser(user))
       } catch (error) {
-        if (active && (error.status === 401 || error.status === 403)) {
-          localStorage.removeItem(TOKEN_KEY)
+        if (active) {
+          if (error.status === 401 || error.status === 403) {
+            localStorage.removeItem(TOKEN_KEY)
+            dispatch(setRegistrations([]))
+            dispatch(logoutUser(error.message))
+          } else {
+            setSessionError(error.message)
+          }
         }
       } finally {
         if (active) setRestoringSession(false)
@@ -40,10 +55,22 @@ function App() {
 
     restoreSession()
     return () => { active = false }
-  }, [dispatch])
+  }, [dispatch, restoreAttempt])
 
   if (restoringSession) {
     return <main className="page-content"><p role="status">Checking your login…</p></main>
+  }
+
+  if (sessionError) {
+    return (
+      <main className="page-content">
+        <section className="page-panel">
+          <h1>Could not check your login</h1>
+          <p role="alert">{sessionError}</p>
+          <button type="button" onClick={() => setRestoreAttempt(restoreAttempt + 1)}>Try again</button>
+        </section>
+      </main>
+    )
   }
 
   return (

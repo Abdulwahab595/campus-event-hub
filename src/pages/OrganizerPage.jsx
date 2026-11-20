@@ -2,21 +2,27 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate } from 'react-router'
 import { apiRequest, TOKEN_KEY } from '../api'
-import { setEvents, deleteEvent } from '../store/eventsSlice'
+import { setEvents, deleteEvent, setEventMessage } from '../store/eventsSlice'
 import './Organizer.css'
 
 function OrganizerPage() {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.currentUser)
   const events = useSelector((state) => state.events.items)
+  const savedMessage = useSelector((state) => state.events.message)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [actionError, setActionError] = useState('')
   const [pendingDelete, setPendingDelete] = useState('')
   const [deleting, setDeleting] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(savedMessage)
   const [refresh, setRefresh] = useState(0)
   const organizerId = user?.role === 'organizer' && user.isVerified ? user.id : ''
+
+  useEffect(() => {
+    // Keep the message on this visit, then clear it for the next visit.
+    dispatch(setEventMessage(''))
+  }, [dispatch])
 
   useEffect(() => {
     if (!organizerId) return

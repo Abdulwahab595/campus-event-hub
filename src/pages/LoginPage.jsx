@@ -9,6 +9,7 @@ function LoginPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const currentUser = useSelector((state) => state.auth.currentUser)
+  const sessionMessage = useSelector((state) => state.auth.sessionMessage)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -17,6 +18,7 @@ function LoginPage() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    if (submitting) return
 
     const normalizedEmail = email.trim().toLowerCase()
     setError('')
@@ -45,6 +47,7 @@ function LoginPage() {
       <h1>Log in</h1>
       <p>Access your Campus Event Hub account.</p>
       <p className="demo-note">Verify your email before logging in.</p>
+      {sessionMessage && !error && <p className="form-error" role="alert">{sessionMessage}</p>}
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="login-email">

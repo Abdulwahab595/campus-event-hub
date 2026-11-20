@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate, useNavigate, useParams } from 'react-router'
 import { apiRequest, TOKEN_KEY } from '../api'
 import EventForm from '../components/EventForm'
-import { saveEvent } from '../store/eventsSlice'
+import { saveEvent, setEventMessage } from '../store/eventsSlice'
 import './Organizer.css'
 
 function OrganizerEventFormPage() {
@@ -43,10 +43,11 @@ function OrganizerEventFormPage() {
     setSaving(true)
     setError('')
     try {
-      const { event: saved } = await apiRequest(eventId ? `/api/events/${eventId}` : '/api/events', {
+      const { event: saved, warning } = await apiRequest(eventId ? `/api/events/${eventId}` : '/api/events', {
         method: eventId ? 'PUT' : 'POST', data: values, token: localStorage.getItem(TOKEN_KEY),
       })
       dispatch(saveEvent(saved))
+      dispatch(setEventMessage(warning || (eventId ? 'Event updated.' : 'Event created.')))
       navigate('/organizer')
     } catch (error) {
       setError(error.message)
