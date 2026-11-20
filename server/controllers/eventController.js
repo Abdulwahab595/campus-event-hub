@@ -3,6 +3,7 @@ const sanitizeHtml = require("sanitize-html");
 const Event = require("../models/Event");
 const Registration = require("../models/Registration");
 const eventData = require("../utils/eventData");
+const sendEventAnnouncement = require("../utils/sendEventAnnouncement");
 
 const categories = ["Workshop", "Seminar", "Sports", "Other"];
 
@@ -88,7 +89,16 @@ async function createEvent(req, res) {
   if (input.error) return res.status(400).json({ message: input.error });
 
   const event = await Event.create({ ...input.values, organizerId: req.user.id });
-  return res.status(201).json({ message: "Event created.", event: eventData(event) });
+  let warning = "";
+  try {
+    const result = await sendEventAnnouncement(event);
+    if (result.failed) warning = "Event saved, but some announcement emails could not be sent.";
+  } catch (error) {
+    console.error("Event announcements failed:", error.code || error.name);
+    warning = "Event saved, but announcement emails could not be sent.";
+  }
+
+  return res.status(201).json({ message: "Event created.", event: eventData(event), warning });
 }
 
 async function updateEvent(req, res) {
