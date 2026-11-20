@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const registrationSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true },
+  // Remember the event start time after its reminder is sent.
+  reminderSentFor: { type: Date },
 });
 
 // A student can register once per event.

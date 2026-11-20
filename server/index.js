@@ -8,6 +8,7 @@ const Registration = require("./models/Registration");
 const authRoutes = require("./routes/authRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
+const sendEventReminders = require("./utils/sendEventReminders");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -50,6 +51,9 @@ async function startServer() {
     }
 
     console.log(`Server running at http://localhost:${PORT}`);
+    // Check once at startup, then every minute while the server is running.
+    sendEventReminders();
+    setInterval(sendEventReminders, 60 * 1000);
   });
 }
 
