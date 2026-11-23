@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "demo": "node scripts/demo.mjs",
+    "db:start": "docker compose up -d --wait --wait-timeout 60",
+    "db:stop": "docker compose stop",
+    "server": "npm --prefix server start",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
